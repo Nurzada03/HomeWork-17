@@ -1,86 +1,68 @@
-import {
-  NavLink,
-  BrowserRouter,
-  Routes,
-  Route,
-  useNavigate,
-} from "react-router-dom";
-import Products from "./components/Products";
-import MyCart from "./components/MyCart";
-import MyOrder from "./components/MyOrder";
-import styled from "styled-components";
-import DetailsPage from "./components/pages/DetailsPage";
-import Button from "./UI/Button";
-
-function AppContent() {
-  const navigate = useNavigate();
-
-  return (
-    <div>
-      <StyledHeader>
-        <h1>LOGO</h1>
-        <StyledLink>
-          <StyledText to="/products">Products</StyledText>
-          <StyledText to="/myCart">My Cart</StyledText>
-          <StyledText to="/myOrder">My Orders</StyledText>
-        </StyledLink>
-      </StyledHeader>
-      <main>
-        <Routes>
-          <Route path="/" element={<h1>Welcome to My </h1>}></Route>
-          <Route path="products" element={<Products />} />
-          <Route path="products/:id/details" element={<DetailsPage />} />
-          <Route path="myCart" element={<MyCart />}></Route>
-          <Route path="myOrder" element={<MyOrder />} />
-        </Routes>
-        <ContainerBtn>
-          <Button onClick={() => navigate(-1)}>Go Back</Button>
-        </ContainerBtn>
-      </main>
-    </div>
-  );
-}
+import React from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
+import MainLayout from "./components/layout/MainLayout";
+import Anouncements from "./pages/Anouncements";
+import ContentDetails from "./pages/courespages/ContentDetails";
+import LatePage from "./pages/courespages/materialPages/LatePage";
+import MaterialContent from "./pages/courespages/materialPages/MaterialContent";
+import Ratings from "./pages/courespages/materialPages/Ratings";
+import Students from "./pages/courespages/materialPages/Students";
+import SubmittedPage from "./pages/courespages/materialPages/SubmittedPage";
+import WaitingPage from "./pages/courespages/materialPages/WaitingPage";
+import ContentStudentsPage from "./pages/courespages/studentsPage/ContentStudentsPage";
+import Courses from "./pages/Courses";
+import Notfoundpage from "./pages/Notfoundpage";
+import Notifications from "./pages/Notifications";
+import Schedule from "./pages/Schedule";
 
 const App = () => {
+  const MATERIALS = [
+    {
+      title: "Material 1",
+      id: 1,
+    },
+    {
+      title: "Material 2",
+      id: 2,
+    },
+  ];
   return (
-    <BrowserRouter>
-      <AppContent />
-    </BrowserRouter>
+    <>
+      <Routes>
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<Navigate to="/course/material" />} />
+          <Route path="course" element={<Courses />}>
+            {/* ////////////////////////studentPage/////////////// */}
+            <Route path="students" element={<Students />} />
+
+            <Route
+              path="students/:id/details"
+              element={<ContentStudentsPage />}
+            ></Route>
+
+            {/* ///////////////materialsPage///////////////////////////////////////////////////////////////// */}
+
+            <Route
+              path="material"
+              element={<MaterialContent MATERIALS={MATERIALS} />}
+            ></Route>
+
+            <Route path="material/:id/details" element={<ContentDetails />}>
+              <Route path="submitted" element={<SubmittedPage />} />
+              <Route path="waiting" element={<WaitingPage />} />
+              <Route path="late" element={<LatePage />} />
+            </Route>
+            {/* ///////////////////////////////////////////////////////////////////////////// */}
+            <Route path="ratings" element={<Ratings />} />
+          </Route>
+          <Route path="anouncements" element={<Anouncements />} />
+          <Route path="notifications" element={<Notifications />} />
+          <Route path="schedule" element={<Schedule />} />
+          <Route path="*" element={<Notfoundpage />} />
+        </Route>
+      </Routes>
+    </>
   );
 };
 
 export default App;
-
-const StyledHeader = styled.header`
-  width: 100%;
-  height: 120px;
-  background-color: #2c88d9;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-left: 150px;
-  padding-right: 150px;
-  color: white;
-`;
-
-const StyledLink = styled.div`
-  display: flex;
-  justify-content: space-evenly;
-  font-size: 35px;
-  width: 50%;
-`;
-
-const StyledText = styled(NavLink)`
-  color: white;
-  text-decoration: none;
-  &.active {
-    color: black;
-  }
-`;
-
-const ContainerBtn = styled.div`
-  margin-top: 20px;
-  border: 0px solid;
-  border-radius: 20px;
-  margin-left: 200px;
-`;
